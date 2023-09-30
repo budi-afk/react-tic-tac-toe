@@ -24,3 +24,7 @@ body {
   background-color: white;
   cursor: pointer;
 }
+
+.status {
+  margin-bottom: 10px;
+}
