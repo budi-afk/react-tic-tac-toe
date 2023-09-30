@@ -8,12 +8,27 @@ function Square({ value, onSquareClick }) {
   );
 }
 export default function Board() {
+  // state untuk membuat 9 array kosong
   const [squares, setSquares] = useState(Array(9).fill(""));
 
+  // state untuk nilai board
+  const [nextX, setNextX] = useState(true);
+
   function handleClick(i) {
+    // cek apakah board sudah ada isinya
+    if (squares[i]) return;
+
+    // duplikat array
     const nextSquares = squares.slice();
-    nextSquares[i] = "X";
+
+    // cek apakah nextX = true, jika ya nilainya "X", jika tidak nilainya "O"
+    nextSquares[i] = nextX ? "X" : "O";
+
+    // ganti dengan array yang baru
     setSquares(nextSquares);
+
+    // ubah nilai nextX jika "true" kemudian jadi "false", dan sebaliknya
+    setNextX(!nextX);
   }
   return (
     <div className="board">
