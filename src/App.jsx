@@ -8,13 +8,7 @@ function Square({ value, onSquareClick }) {
     </button>
   );
 }
-export default function Board() {
-  // state untuk membuat 9 array kosong
-  const [squares, setSquares] = useState(Array(9).fill(""));
-
-  // state untuk nilai board
-  const [nextX, setNextX] = useState(true);
-
+function Board({ nextX, squares, onPlay }) {
   function handleClick(i) {
     // cek apakah board sudah ada isinya / sudah ada pemenangnya
     if (squares[i] || calculateWinner(squares)) return;
@@ -25,11 +19,7 @@ export default function Board() {
     // cek apakah nextX = true, jika ya nilainya "X", jika tidak nilainya "O"
     nextSquares[i] = nextX ? "X" : "O";
 
-    // ganti dengan array yang baru
-    setSquares(nextSquares);
-
-    // ubah nilai nextX jika "true" kemudian jadi "false", dan sebaliknya
-    setNextX(!nextX);
+    onPlay(nextSquares);
   }
 
   const winner = calculateWinner(squares);
@@ -54,6 +44,51 @@ export default function Board() {
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
     </>
+  );
+}
+
+export default function Game() {
+  // state untuk membuat array dalam array
+  const [history, setHistory] = useState([Array(9).fill("")]);
+  const [currentMove, setCurrentMove] = useState(0);
+  // state untuk nilai board
+  const nextX = currentMove % 2 === 0;
+
+  // function move
+  const currentSquares = history[currentMove];
+
+  function jumpTo(nextMove) {
+    setCurrentMove(nextMove);
+  }
+
+  function handlePlay(nextSquares) {
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
+  }
+
+  const moves = history.map((squares, move) => {
+    let desc = "";
+    if (move > 0) {
+      desc = "Go to move # " + move;
+    } else {
+      desc = "Go to game start";
+    }
+
+    return (
+      <li key={move}>
+        <button onClick={() => jumpTo(move)}>{desc}</button>
+      </li>
+    );
+  });
+
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board nextX={nextX} squares={currentSquares} onPlay={handlePlay} />
+      </div>
+      <div className="game-info">{moves}</div>
+    </div>
   );
 }
 

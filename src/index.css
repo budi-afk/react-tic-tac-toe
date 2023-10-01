@@ -28,3 +28,11 @@ body {
 .status {
   margin-bottom: 10px;
 }
+
+.game {
+  display: flex;
+}
+
+.game-board {
+  margin-right: 50px;
+}
